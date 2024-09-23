@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "367458161273",
+    "project_id": "login-tutorial-c0a26",
+    "storage_bucket": "login-tutorial-c0a26.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367458161273:android:f0be6b4b830814946dbaa8",
+        "android_client_info": {
+          "package_name": "com.example.login_with_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqTo6SncExDTyuDuUQ_nV9Nh1TcV1fPfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
