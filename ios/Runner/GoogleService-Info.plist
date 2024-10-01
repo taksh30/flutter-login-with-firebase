@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyDNG2P6Pts8H1DlxFaWhQud0apdw4rJkN8</string>
+	<string>AIzaSyA4sKUCKQgQdYcveJ9ckL9MkSnkEIjWFDU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>367458161273</string>
+	<string>1012594130721</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.loginWithFirebase</string>
 	<key>PROJECT_ID</key>
-	<string>login-tutorial-c0a26</string>
+	<string>login-with-firebase-9083c</string>
 	<key>STORAGE_BUCKET</key>
-	<string>login-tutorial-c0a26.appspot.com</string>
+	<string>login-with-firebase-9083c.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:367458161273:ios:96e2437abae798a66dbaa8</string>
+	<string>1:1012594130721:ios:50cd97af1c406278248860</string>
 </dict>
 </plist>
