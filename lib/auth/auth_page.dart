@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_with_firebase/pages/login_screen.dart';
-import 'package:login_with_firebase/pages/register_page.dart';
+import 'package:login_with_firebase/pages/create_user.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -26,7 +26,7 @@ class _AuthPageState extends State<AuthPage> {
         },
       );
     } else {
-      return RegisterPage(
+      return CreateUser(
         showLoginPage: () {
           toggleScreens();
         },

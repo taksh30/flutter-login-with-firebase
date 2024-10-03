@@ -1,68 +1,74 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:login_with_firebase/components/common_text_field.dart';
 import 'package:login_with_firebase/constants.dart';
-import 'package:login_with_firebase/pages/forgot_pw_page.dart';
 
-class LoginScreen extends StatefulWidget {
-  final VoidCallback onTap;
-  const LoginScreen({super.key, required this.onTap});
+class CreateUser extends StatefulWidget {
+  final VoidCallback showLoginPage;
+  const CreateUser({super.key, required this.showLoginPage});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<CreateUser> createState() => _CreateUserState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _CreateUserState extends State<CreateUser> {
   final _emailCtr = TextEditingController();
   final _passCtr = TextEditingController();
-
-  Future _signIn() async {
-    try {
-      if (_emailCtr.text.isNotEmpty && _passCtr.text.isNotEmpty) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                ),
-              );
-            });
-
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailCtr.text.trim(),
-          password: _passCtr.text.trim(),
-        );
-      } else {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return const AlertDialog(
-                content: Text(
-                  'Enter the fields',
-                ),
-              );
-            });
-      }
-    } on FirebaseAuthException catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-    Navigator.of(context).pop();
-  }
+  final _confirmPassCtr = TextEditingController();
+  final _firstNameCtr = TextEditingController();
+  final _lastNameCtr = TextEditingController();
+  final _ageCtr = TextEditingController();
 
   @override
   void dispose() {
     _emailCtr.dispose();
     _passCtr.dispose();
+    _confirmPassCtr.dispose();
+    _firstNameCtr.dispose();
+    _lastNameCtr.dispose();
+    _ageCtr.dispose();
     super.dispose();
+  }
+
+  Future _signUp() async {
+    if (_passwordConfirmed()) {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailCtr.text.trim(),
+        password: _passCtr.text.trim(),
+      );
+
+      _addUserDetails(
+        _firstNameCtr.text.trim(),
+        _lastNameCtr.text.trim(),
+        _emailCtr.text.trim(),
+        int.parse(_ageCtr.text.trim()),
+      );
+    }
+  }
+
+  Future _addUserDetails(
+      String firstName, String lastName, String email, int age) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'first name': firstName,
+      'last name': lastName,
+      'age': age,
+      'email': email,
+    });
+  }
+
+  bool _passwordConfirmed() {
+    if (_passCtr.text.trim() == _confirmPassCtr.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       body: SafeArea(
         child: Container(
           decoration: Constants().boxDecoration,
@@ -71,26 +77,43 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.access_time_outlined,
-                    size: 100,
-                  ),
-                  const SizedBox(
-                    height: 35,
-                  ),
                   const Text(
-                    'Hello Again!',
+                    'Hello There!',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 43),
                   ),
                   const SizedBox(
                     height: 5,
                   ),
                   const Text(
-                    'Welcome Back Buddy',
+                    'Register below with your details',
                     style: TextStyle(fontSize: 24),
                   ),
                   const SizedBox(
-                    height: 50,
+                    height: 40,
+                  ),
+                  CommonTextField(
+                    controller: _firstNameCtr,
+                    obscureText: false,
+                    text: 'First Name',
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CommonTextField(
+                    controller: _lastNameCtr,
+                    obscureText: false,
+                    text: 'Last name',
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CommonTextField(
+                    controller: _ageCtr,
+                    obscureText: false,
+                    text: 'Age',
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   CommonTextField(
                     controller: _emailCtr,
@@ -98,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: 'Email',
                   ),
                   const SizedBox(
-                    height: 15,
+                    height: 10,
                   ),
                   CommonTextField(
                     controller: _passCtr,
@@ -106,29 +129,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: 'Password',
                   ),
                   const SizedBox(
-                    height: 5,
+                    height: 10,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        width: 270,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ForgotPasswordPage(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Forgot Password?',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    ],
+                  CommonTextField(
+                    controller: _confirmPassCtr,
+                    obscureText: true,
+                    text: 'Confirm Password',
                   ),
                   const SizedBox(
                     height: 15,
@@ -147,10 +153,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           onPressed: () {
-                            _signIn();
+                            _signUp();
                           },
                           child: const Text(
-                            'Sign In',
+                            'Sign Up',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -169,14 +175,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
-                          'Not a member?',
+                          'I am a member!',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                       GestureDetector(
-                        onTap: widget.onTap,
+                        onTap: widget.showLoginPage,
                         child: const Text(
-                          'Register Now',
+                          'Login Now',
                           style: TextStyle(
                               color: Colors.teal, fontWeight: FontWeight.bold),
                         ),

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:login_with_firebase/components/common_text_field.dart';
+import 'package:login_with_firebase/constants.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -18,7 +20,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     super.dispose();
   }
 
-  Future passwordReset() async {
+  Future _passwordReset() async {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: _emailCtr.text.trim());
@@ -42,51 +44,53 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple.shade300,
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.black,
         elevation: 0,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-                'Enter your email and we will send you a password reset link.'),
-            const SizedBox(
-              height: 15,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: TextField(
+      body: Container(
+        decoration: Constants().boxDecoration,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                  'Enter your email and we will send you a password reset link.'),
+              const SizedBox(
+                height: 15,
+              ),
+              CommonTextField(
                 controller: _emailCtr,
-                decoration: InputDecoration(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  focusedBorder: OutlineInputBorder(
+                obscureText: false,
+                text: 'Email',
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(405, 50),
+                    backgroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.deepPurple)),
-                  fillColor: Colors.grey.shade200,
-                  filled: true,
-                  // border: InputBorder.none,
-                  hintText: 'Email',
+                    ),
+                  ),
+                  onPressed: () {
+                    _passwordReset();
+                  },
+                  child: const Text(
+                    'Reset Password',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            MaterialButton(
-              onPressed: () {
-                passwordReset();
-              },
-              color: Colors.deepPurple.shade300,
-              child: const Text('Reset Password'),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
